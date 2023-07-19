@@ -1,0 +1,147 @@
+openapi: 3.0.1
+info:
+  title: Meu consultório API
+  version: 0.0.1
+  termsOfService: https://mockapi.io
+  description: API para gerenciamento de especialidades médicas em consultório.
+  ---
+  # Autorização
+  
+  Para utilizar qualquer `path` da Meu Consultório API, você pode adicionar um `token` do tipo `bearer` ao campo `Authorization`.
+  Também é possível utilizar a API sem a adição do `token`, mas por segurança, recomendamos a utilização do `token` em todas as operações. 
+ ---
+ # Possibilidades
+  A Meu Consultório API permite que as pessoas usuárias realizem chamadas para:
+  - Visualizar uma lista de especialidades médicas disponíveis no consultório.
+  - Adicionar uma nova especialidade médica.
+  - Visualizar uma especialidade específica utilizando seu ID.
+  - Atualizar uma especialidade específica utilizando seu ID.
+  - Remover uma especialidade da lista de especialidade médicas disponíveis no consultório.
+---
+   contact:
+    name: Suporte a Devs
+    email: contato@example.com
+    url: https://mockapi.io
+  license:
+    name: "Lincença: GPLv3"
+    url: https://www.gnu.org/licenses/gpl-3.0.html
+externalDocs:
+  description: Documentação burocrática
+  url: https://mockapi.io
+servers:
+- url: https://6096015d116f3f00174b29ba.mockapi.io/
+  description: API de Teste
+tags: 
+  - name: Especialidades
+    description: Tudo sobre como visualizar, criar, atualizar e remover especialidades médicas.
+paths:
+  /especialidades:
+    get:
+      tags:
+        - Especialidades
+      summary: Recupera todas as especialidades
+      responses:
+        200:
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: "#/components/schemas/Especialidades"
+    post:
+      tags:
+        - Especialidades
+      summary: Cria nova especialidade
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                descricao:
+                  type: string
+      responses:
+        201:
+          description: "Sucesso"
+          content:
+            application/json:
+              schema:
+                items: 
+                  $ref: "#/components/schemas/Especialidade"
+  /especialidades/{id}:
+    parameters:
+    - name: id
+      in: path
+      schema:
+        type: integer
+      required: true
+    get:
+      tags:
+        - Especialidades
+      summary: Recupera uma especialidade pelo ID
+      responses:
+        200:
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                items: 
+                  $ref: "#/components/schemas/Especialidade"
+        404:
+          description: Especialidade não encontrada
+          content:
+            application/json:
+              example: "Not Found"
+    put: 
+      tags:
+        - Especialidades
+      summary: Atualiza uma especialidade pelo ID
+      requestBody: 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: 
+                descricao:
+                  type: string
+      responses:
+        200:
+          description: Especialidade atualizada
+          content:
+            application/json:
+              schema:
+                items: 
+                  $ref: "#/components/schemas/Especialidade"
+    delete:
+      tags:
+        - Especialidades
+      summary: Remove uma especialidade pelo ID
+      responses:
+        200: 
+          description: Especialidade removida
+          content: 
+            application/json:
+              schema:
+               items: 
+                  $ref: "#/components/schemas/Especialidade"
+security: 
+  - auth: []
+components:
+  schemas:
+    Especialidade:
+      type: object
+      properties: 
+        id:
+          type: integer
+        descricao:
+          type: string
+    Especialidades:
+        type: array
+        items: 
+          $ref: "#/components/schemas/Especialidade"
+  securitySchemes:
+    auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
